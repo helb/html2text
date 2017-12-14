@@ -28,6 +28,7 @@ type textifyTraverseCtx struct {
 	endsWithSpace   bool
 	endsWithNewline bool
 	justClosedDiv   bool
+	isPre           bool
 }
 
 func (ctx *textifyTraverseCtx) traverse(node *html.Node) error {
@@ -36,7 +37,12 @@ func (ctx *textifyTraverseCtx) traverse(node *html.Node) error {
 		return ctx.traverseChildren(node)
 
 	case html.TextNode:
-		data := strings.Trim(spacingRe.ReplaceAllString(node.Data, " "), " ")
+		var data string
+		if ctx.isPre {
+			data = node.Data
+		} else {
+			data = strings.Trim(spacingRe.ReplaceAllString(node.Data, " "), " ")
+		}
 		return ctx.emit(data)
 
 	case html.ElementNode:
@@ -169,6 +175,12 @@ func (ctx *textifyTraverseCtx) handleElementNode(node *html.Node) error {
 		}
 
 		return ctx.emit("\n")
+
+	case atom.Pre, atom.Code:
+		ctx.isPre = true
+		err := ctx.traverseChildren(node)
+		ctx.isPre = false
+		return err
 
 	case atom.Style, atom.Script, atom.Head:
 		// Ignore the subtree

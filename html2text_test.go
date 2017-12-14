@@ -351,6 +351,10 @@ func TestHeadings(t *testing.T) {
 			"<h3> <span class='a'>Test </span></h3>",
 			"Test\n----",
 		},
+		{
+			"<pre>test1\ntest 2\n\ntest  3</pre>",
+			"test1\ntest 2\n\ntest  3",
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -525,7 +529,7 @@ func TestText(t *testing.T) {
 			`hi
 
 			<br>
-	
+
 	hello <a href="https://google.com">google</a>
 	<br><br>
 	test<p>List:</p>
