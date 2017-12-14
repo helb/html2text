@@ -176,7 +176,7 @@ func (ctx *textifyTraverseCtx) handleElementNode(node *html.Node) error {
 
 		return ctx.emit("\n")
 
-	case atom.Pre, atom.Code:
+	case atom.Pre:
 		ctx.isPre = true
 		err := ctx.traverseChildren(node)
 		ctx.isPre = false
